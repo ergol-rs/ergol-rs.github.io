@@ -168,8 +168,12 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="getting-started"><a class="header" href="#getting-started">Getting started</a></h1>
-<p>This crate provides the <code>#[ergol]</code> macro. It allows to persist the data in a
-database. For example, you just have to write</p>
+<p>This crate provides the <code>#[ergol]</code> macro. You can use it by adding</p>
+<pre><code class="language-toml">ergol = &quot;0.1&quot;
+</code></pre>
+<p>to your dependencies.</p>
+<p>It allows to persist the data in a database. For example, you just have to
+write</p>
 <pre><pre class="playground"><code class="language-rust edition2018">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -651,8 +655,14 @@ for (project, role) in thomas.projects(&amp;db).await? {
 </span></code></pre></pre>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="using-ergol-with-rocket"><a class="header" href="#using-ergol-with-rocket">Using ergol with rocket</a></h1>
 <p>You can integrate ergol with <a href="https://crates.io/crates/rocket">rocket</a>!</p>
-<p>There is a little bit of boilerplate, but once everything is set up, you can use ergol in your
-routes!</p>
+<p><strong>Note:</strong> ergol supports only rocket 0.5, which is not published on crates.io
+yet. If you wish to use ergol with rocket, you must use ergol git version
+instead of the crates.io version, in order to be able to use the <code>with-rocket</code>
+feature. The dependency in your <code>Cargo.toml</code> will look like this:</p>
+<pre><code class="language-toml">ergol = { git = &quot;https://github.com/polymny/ergol&quot;, rev = &quot;v0.1.0&quot;, features = [&quot;with-rocket&quot;] }
+</code></pre>
+<p>There is a little bit of boilerplate, but once everything is set up, you can
+use ergol in your routes!</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">extern crate ergol;
 </span>#[macro_use]
 extern crate rocket;
@@ -748,8 +758,8 @@ async fn main() -&gt; Result&lt;(), rocket::Error&gt; {
     Ok(())
 }
 </code></pre></pre>
-<p>See <a href="https://github.com/polymny/ergol/blob/dev/example/src/rocket.rs">the example</a> for more
-details.</p>
+<p>See <a href="https://github.com/polymny/ergol/blob/dev/example/src/rocket.rs">the example</a>
+for more details.</p>
 <div id="chapter_begin" style="break-before: page; page-break-before: always;"></div><h1 id="migrations"><a class="header" href="#migrations">Migrations</a></h1>
 <p>Ergol comes with a (pretty simple for the moment) system for migrations.</p>
 <p>In order to be able to manage your migrations, you need to install ergol cli:</p>
