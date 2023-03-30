@@ -5,8 +5,10 @@
         <meta charset="UTF-8">
         <title>Ergol book</title>
         <meta name="robots" content="noindex" />
+
+
         <!-- Custom HTML head -->
-        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff" />
@@ -17,25 +19,29 @@
         <link rel="stylesheet" href="css/general.css">
         <link rel="stylesheet" href="css/chrome.css">
         <link rel="stylesheet" href="css/print.css" media="print">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
         <link rel="stylesheet" href="fonts/fonts.css">
+
         <!-- Highlight.js Stylesheets -->
         <link rel="stylesheet" href="highlight.css">
         <link rel="stylesheet" href="tomorrow-night.css">
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+
     </head>
     <body>
+    <div id="body-container">
         <!-- Provide site root to javascript -->
-        <script type="text/javascript">
+        <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
 
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
-        <script type="text/javascript">
+        <script>
             try {
                 var theme = localStorage.getItem('mdbook-theme');
                 var sidebar = localStorage.getItem('mdbook-sidebar');
@@ -51,7 +57,7 @@
         </script>
 
         <!-- Set the theme before any content is loaded, prevents flash -->
-        <script type="text/javascript">
+        <script>
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -63,12 +69,14 @@
         </script>
 
         <!-- Hide / unhide sidebar before it is displayed -->
-        <script type="text/javascript">
+        <script>
             var html = document.querySelector('html');
-            var sidebar = 'hidden';
+            var sidebar = null;
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
             }
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
@@ -84,7 +92,7 @@
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
+                                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky bordered">
                     <div class="left-buttons">
                         <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -94,7 +102,7 @@
                             <i class="fa fa-paint-brush"></i>
                         </button>
                         <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
@@ -111,6 +119,7 @@
                         <a href="print.html" title="Print this book" aria-label="Print this book">
                             <i id="print-button" class="fa fa-print"></i>
                         </a>
+
                     </div>
                 </div>
 
@@ -124,8 +133,9 @@
                         </ul>
                     </div>
                 </div>
+
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
-                <script type="text/javascript">
+                <script>
                     document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
                     document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
                     Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
@@ -154,8 +164,7 @@ pub struct User {
     pub password: String,
     pub age: Option&lt;i32&gt;,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>and the <code>#[ergol]</code> macro will generate most of the code you will need. You'll
 then be able to run code like the following:</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">extern crate tokio;
@@ -201,8 +210,7 @@ let user: Option&lt;User&gt; = User::get_by_username(&quot;thomas&quot;, &amp;db
 // Select all users
 let users: Vec&lt;User&gt; = User::select().execute(&amp;db).await?;
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ergol-macro"><a class="header" href="#ergol-macro">Ergol macro</a></h1>
 <p>The <code>#[ergol]</code> macro transforms your struct in a table, and gives you methods
 to easily access it.</p>
@@ -218,8 +226,7 @@ pub struct User {
     pub password: String,
     pub age: i32,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <h2 id="the-id-attribute"><a class="header" href="#the-id-attribute">The <code>#[id]</code> attribute</a></h2>
 <p>In every table, a primary key is required. For the moment, <code>ergol</code> requires to
 have an <code>id</code> column, which is an <code>i32</code> field named <code>id</code>.</p>
@@ -253,8 +260,7 @@ extra methods to fetch an element from this attribute. For example, with the
 </span><span class="boring">User::create_table().execute(&amp;db).await?;
 </span>let user: Option&lt;User&gt; = User::get_by_username(&quot;thomas&quot;, &amp;db).await?;
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="enums-in-ergol"><a class="header" href="#enums-in-ergol">Enums in ergol</a></h1>
 <p>To use an enum in an <code>ergol</code> managed struct, this enum needs to derive
 <code>Debug</code> and <code>PgEnum</code>. An <code>ergol</code> managed enum cannot have attributes.</p>
@@ -276,8 +282,7 @@ pub enum Role {
     Guest,
     Admin,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="one-to-one-and-many-to-one-relationships"><a class="header" href="#one-to-one-and-many-to-one-relationships">One-to-one and many-to-one relationships</a></h1>
 <p>Let's say you want a user to be able to have projects. You can use the
 <code>#[many_to_one]</code> attribute in order to do so. Let's take the following code as
@@ -301,8 +306,7 @@ pub struct Project {
     pub name: String,
     #[many_to_one(projects)] pub owner: User,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Once you have defined this struct, many more functions become available:</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">extern crate tokio;
 </span><span class="boring">extern crate ergol;
@@ -354,8 +358,7 @@ let projects: Vec&lt;Project&gt; = thomas.projects(&amp;db).await?;
 // You can also find the owner of a project
 let owner: User = projects[0].owner(&amp;db).await?;
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>You can similarly have one-to-one relationship between a user and a project by
 using the <code>#[one_to_one]</code> attribute:</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">#![allow(unused)]
@@ -375,8 +378,7 @@ pub struct Project {
     pub name: String,
     #[one_to_one(project)] pub owner: User,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>This will add the <code>UNIQUE</code> attribute in the database and make the <code>project</code>
 method only return an option:</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">extern crate tokio;
@@ -415,8 +417,7 @@ method only return an option:</p>
 </span>// You can easily find a user's project
 let project: Option&lt;Project&gt; = thomas.project(&amp;db).await?;
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <p>Note that that way, a project has exactly one owner, but a user can have no
 project.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="many-to-many-relationships"><a class="header" href="#many-to-many-relationships">Many-to-many relationships</a></h1>
@@ -441,8 +442,7 @@ pub struct Project {
     pub name: String,
     #[many_to_many(visible_projects)] pub authorized_users: User,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The same way, you will have plenty of functions that you will be able to use to
 manage your objects:</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">extern crate tokio;
@@ -514,8 +514,7 @@ let _: bool = nicolas.remove_visible_project(&amp;first_project, &amp;db).await?
 
 // The remove functions return true if they successfully removed something.
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <h3 id="extra-information-in-a-many-to-many-relationship"><a class="header" href="#extra-information-in-a-many-to-many-relationship">Extra information in a many-to-many relationship</a></h3>
 <p>It is possible to insert some extra information in a many to many relationship. The following
 exemple gives roles for the users for projects.</p>
@@ -545,8 +544,7 @@ pub struct Project {
     pub name: String,
     #[many_to_many(projects, Role)] pub users: User,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>With these structures, the signature of generated methods change to take a role as argument,
 and to return tuples of (User, Role) or (Project, Role).</p>
 <pre><pre class="playground"><code class="language-rust edition2018"><span class="boring">extern crate tokio;
@@ -612,8 +610,7 @@ for (project, role) in thomas.projects(&amp;db).await? {
     println!(&quot;{} has {:?} rights on project {:?}&quot;, thomas.username, role, project.name);
 }
 <span class="boring">Ok(())
-</span><span class="boring">}
-</span></code></pre></pre>
+</span><span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="using-ergol-with-rocket"><a class="header" href="#using-ergol-with-rocket">Using ergol with rocket</a></h1>
 <p>You can integrate ergol with <a href="https://crates.io/crates/rocket">rocket</a>!</p>
 <p><strong>Note:</strong> ergol supports only rocket 0.5, which is not published on crates.io
@@ -717,8 +714,7 @@ async fn main() -&gt; Result&lt;(), rocket::Error&gt; {
 
     // rocket.launch().await
     Ok(())
-}
-</code></pre></pre>
+}</code></pre></pre>
 <p>See <a href="https://github.com/polymny/ergol/blob/dev/example/src/rocket.rs">the example</a>
 for more details.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="migrations"><a class="header" href="#migrations">Migrations</a></h1>
@@ -749,8 +745,7 @@ pub struct User {
     username: String,
     email: String,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>The <code>up.sql</code> will look like this</p>
 <pre><code class="language-sql">CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -776,8 +771,7 @@ pub struct User {
     email: String,
     age: i32,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>If I run <code>ergol save</code> again, I will have a <code>migrations/1/up.sql</code> that will look
 like this:</p>
 <pre><code class="language-sql">ALTER TABLE users ADD age INT NOT NULL DEFAULT /* TODO default value */;
@@ -799,31 +793,43 @@ particularly useful when developping an app when you want to reset your database
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+
+
                         <div style="clear: both"></div>
                     </nav>
                 </div>
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
             </nav>
 
         </div>
 
-        <script type="text/javascript">
+
+
+
+        <script>
             window.playground_copyable = true;
         </script>
-        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
-        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
-        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script type="text/javascript">
+
+        <script>
         window.addEventListener('load', function() {
             window.setTimeout(window.print, 100);
         });
         </script>
+
+    </div>
     </body>
 </html>
