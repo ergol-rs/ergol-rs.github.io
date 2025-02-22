@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js light">
+<html lang="en" class="light sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,10 +7,10 @@
 
 
         <!-- Custom HTML head -->
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="favicon.svg">
         <link rel="shortcut icon" href="favicon.png">
@@ -30,15 +30,17 @@
 
         <!-- Custom theme stylesheets -->
 
-    </head>
-    <body>
-    <div id="body-container">
+
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
-
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -60,43 +62,49 @@
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
-            html.classList.remove('no-js')
+            const html = document.documentElement;
             html.classList.remove('light')
             html.classList.add(theme);
-            html.classList.add('js');
+            html.classList.add("js");
         </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var html = document.querySelector('html');
             var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
             }
+            sidebar_toggle.checked = sidebar === 'visible';
             html.classList.remove('sidebar-visible');
             html.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="getting-started.html"><strong aria-hidden="true">1.</strong> Getting started</a></li><li class="chapter-item expanded "><a href="ergol-macro.html"><strong aria-hidden="true">2.</strong> Ergol macro</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="enums.html"><strong aria-hidden="true">2.1.</strong> Enums in ergol</a></li><li class="chapter-item expanded "><a href="one-to-one-and-many-to-one.html"><strong aria-hidden="true">2.2.</strong> One-to-one and many-to-one relationships</a></li><li class="chapter-item expanded "><a href="many-to-many.html"><strong aria-hidden="true">2.3.</strong> Many-to-many relationships</a></li><li class="chapter-item expanded "><a href="rocket.html" class="active"><strong aria-hidden="true">2.4.</strong> Using ergol with rocket</a></li></ol></li><li class="chapter-item expanded "><a href="migrations.html"><strong aria-hidden="true">3.</strong> Migrations</a></li></ol>
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
             </div>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky bordered">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
@@ -150,7 +158,7 @@
 yet. If you wish to use ergol with rocket, you must use ergol git version
 instead of the crates.io version, in order to be able to use the <code>with-rocket</code>
 feature. The dependency in your <code>Cargo.toml</code> will look like this:</p>
-<pre><code class="language-toml">ergol = { git = &quot;https://github.com/polymny/ergol&quot;, rev = &quot;v0.1.0&quot;, features = [&quot;with-rocket&quot;] }
+<pre><code class="language-toml">ergol = { git = "https://github.com/polymny/ergol", rev = "v0.1.0", features = ["with-rocket"] }
 </code></pre>
 <p>There is a little bit of boilerplate, but once everything is set up, you can
 use ergol in your routes!</p>
@@ -203,35 +211,35 @@ pub struct Item {
     count: i32,
 }
 
-#[get(&quot;/add-item/&lt;name&gt;/&lt;count&gt;&quot;)]
+#[get("/add-item/&lt;name&gt;/&lt;count&gt;")]
 async fn add_item(name: String, count: i32, db: Db) -&gt; String {
     Item::create(name, count).save(&amp;db).await.unwrap();
-    &quot;Item added&quot;.into()
+    "Item added".into()
 }
 
-#[get(&quot;/&quot;)]
+#[get("/")]
 async fn list_items(db: Db) -&gt; String {
     let items = Item::select()
         .execute(&amp;db)
         .await
         .unwrap()
         .into_iter()
-        .map(|x| format!(&quot;  - {}: {}&quot;, x.name, x.count))
+        .map(|x| format!("  - {}: {}", x.name, x.count))
         .collect::&lt;Vec&lt;_&gt;&gt;()
-        .join(&quot;\n&quot;);
+        .join("\n");
 
-    format!(&quot;{}\n{}&quot;, &quot;List of items:&quot;, items)
+    format!("{}\n{}", "List of items:", items)
 }
 
 #[rocket::main]
 async fn main() -&gt; Result&lt;(), rocket::Error&gt; {
     // Setup rocket with its database connections pool.
     let rocket = rocket::build()
-        .attach(AdHoc::on_ignite(&quot;Database&quot;, |rocket| async move {
-            let pool = ergol::pool(&quot;host=localhost user=ergol password=ergol&quot;, 32).unwrap();
+        .attach(AdHoc::on_ignite("Database", |rocket| async move {
+            let pool = ergol::pool("host=localhost user=ergol password=ergol", 32).unwrap();
             rocket.manage(pool)
         }))
-        .mount(&quot;/&quot;, routes![list_items, add_item])
+        .mount("/", routes![list_items, add_item])
         .ignite()
         .await?;
 
@@ -259,7 +267,7 @@ for more details.</p>
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="migrations.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="migrations.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -273,7 +281,7 @@ for more details.</p>
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="migrations.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="migrations.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
